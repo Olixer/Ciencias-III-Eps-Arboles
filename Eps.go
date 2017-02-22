@@ -19,7 +19,7 @@ type Node struct {
 }
 
 func (n *Node) String() string {
-	return fmt.Sprint(n.PrimerNombre, " ", n.SegundoNombre, " ", n.PrimerApellido, " ", n.SegundoApellido, " ", n.TipoIdentificacion, " ", n.NumeroIdentificacion, " ", n.Sintomas, " ", n.HoraLlegada, " ", n.eps)
+	return fmt.Sprint("Paciente de nombre ",n.PrimerNombre, " ", n.SegundoNombre, " ", n.PrimerApellido, " ", n.SegundoApellido, " con identificacion ", n.TipoIdentificacion, " ", n.NumeroIdentificacion, " ,posee sintomas como ", n.Sintomas, ",su hora de llegada fue ", n.HoraLlegada, " y viene de parte de la EPS ", n.eps)
 }
 
 // NewQueue returns a new queue with the given initial size.
@@ -82,19 +82,27 @@ func main() {
 	var sintomas string
 	var horaLlegada string
 	var eps string
+	var epsSanitas int
+	var epsFamisanar int
 
 
 	fmt.Println("Sistema Medico\n\n")
+	fmt.Println("Listado EPS\n")
+	fmt.Println("1. Famisanar\n")
+	epsFamisanar=0;
+	fmt.Println("2. Sanitas EPS\n")
+	epsSanitas=0;
+
 	q := NewQueue(1)
 
 	fmt.Println("Cantidad de pacientes a registrar\n\n")
+	fmt.Scanf("%v/n", &pacientes)
 	fmt.Scanf("%v/n", &pacientes)
 
 
 	fmt.Println("Registro de pacientes\n\n")
 
 	for i:=0; i<pacientes; i++{
-
 		fmt.Println("\nPaciente #: ",i+1,"\n")
 		fmt.Println("\nPrimer Nombre: ")
 		fmt.Scanf("%v\n",&primerNombre)
@@ -104,9 +112,9 @@ func main() {
 		fmt.Scanf("%v\n",&primerApellido)
 		fmt.Println("\nSegundo Apellido: ")
 		fmt.Scanf("%v\n",&segundoApellido)
-		fmt.Println("\nTipo Identificación: ")
+		fmt.Println("\nTipo Identificacion: ")
 		fmt.Scanf("%v\n",&tipoIdentificacion)
-		fmt.Println("\nNúmero Identificación: ")
+		fmt.Println("\nNumero Identificacion: ")
 		fmt.Scanf("%v\n",&numeroIdentificacion)
 		fmt.Println("\nSintomas: ")
 		fmt.Scanf("%v\n",&sintomas)
@@ -114,15 +122,24 @@ func main() {
 		fmt.Scanf("%v\n",&horaLlegada)
 		fmt.Println("\neps: ")
 		fmt.Scanf("%v\n",&eps)
+		if(eps=="famisanar"){
+			epsFamisanar++;
+		}else if(eps=="sanitas"){
+			epsSanitas++;
+		}else{
+			fmt.Println("\nEps sin registrar ")
+			eps=eps+" que no se encuentra afiliada"
+		}
 
 	q.Push(&Node{primerNombre,segundoNombre,primerApellido,segundoApellido,tipoIdentificacion,numeroIdentificacion,sintomas,horaLlegada,eps})
 
 	}
+	fmt.Println("\nHistoria clinica\n")
 	for i:=0; i<pacientes; i++{
 	
 		fmt.Println(q.Pop())
 	}
 
-	fmt.Println("\n Pacientes Atendido: ",pacientes,"\n")
-
+	fmt.Println("\nPacientes Atendidos de Famisanar: ",epsFamisanar,"\n")
+	fmt.Println("\nPacientes Atendidos de Sanitas: ",epsSanitas,"\n")
 }
