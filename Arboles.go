@@ -21,7 +21,7 @@ func Calcular(t *ArbolExpresion) int{
   if t.Valor=="/"{
     return Calcular(t.Izquierda) / Calcular(t.Derecha)
   }
-    i:=strconv.Atoi(t.Valor)
+    i,_:=strconv.Atoi(t.Valor)
     return i
 
 }
