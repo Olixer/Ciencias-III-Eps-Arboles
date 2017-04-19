@@ -1,0 +1,36 @@
+package main
+ 
+import (
+    "fmt"
+    "strings" 
+    "regexp"  
+)
+ 
+func main() {
+ fmt.Println("Análisis Léxico")
+ data := "3 5 >= 1 false 8 3 = | & !"
+ //fmt.Println(data)
+ caracteres := strings.Split(data, " ")
+valorNumerico, _ :=regexp.Compile("^([1-9]+)")
+operadorComparacion, _ :=regexp.Compile("^([=|>|<]+)")
+operadorDiferente, _ := regexp.Compile("^!=$")
+valorLogico, _ :=regexp.Compile("^([true|false])")
+operadorLogico, _ := regexp.Compile("^([|*&*!])")
+
+
+
+ 
+for _, caracter := range caracteres {
+	if (valorNumerico.MatchString(caracter)==true){
+		fmt.Println("VN",caracter)
+	}else if (operadorComparacion.MatchString(caracter)==true){
+		fmt.Println("OC",caracter)
+	}else if (operadorDiferente.MatchString(caracter)==true){
+		fmt.Println("OC",caracter)
+	}else if (valorLogico.MatchString(caracter)==true){
+		fmt.Println("VL",caracter)
+	}else if (operadorLogico.MatchString(caracter)==true){
+		fmt.Println("OL",caracter)
+	}
+ }
+}
