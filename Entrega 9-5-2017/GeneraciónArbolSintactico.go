@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 )
+
 //Estructura del arbol y sus nodos
 
 type Arbol struct {
@@ -71,11 +72,9 @@ func (s *StackVariables) PopV() *Variables {
 	return s.stackV[s.count]
 }
 
-
-
 //Funciones que afectan el ingreso de ecuaciones
 
-//Funcion que hace uso de la ecuacion ingresada para hacer uso de los valores numericos
+//Funcion que hace uso de la ecu ingresada para hacer uso de los valores numericos
 func encontrarVariable(cadenaCompleta string) ([]string, []string, string) {
 	s1 := cadenaCompleta
 	if last := len(s1) - 1; last >= 0 && s1[last] == '=' {
@@ -91,7 +90,7 @@ func encontrarVariable(cadenaCompleta string) ([]string, []string, string) {
 		s1 = s1[:last]
 	}
 	arr := strings.Split(s1, " ")
-	variables := []string{}
+	varbls := []string{}
 	cadenaTotal := []string{}
 	variableNueva := arr[len(arr)-1]
 	arr = arr[:len(arr)-1]
@@ -99,17 +98,17 @@ func encontrarVariable(cadenaCompleta string) ([]string, []string, string) {
 		if arr[i] != "+" && arr[i] != "-" && arr[i] != "*" && arr[i] != "/" {
 			if _, err := strconv.Atoi(arr[i]); err == nil {
 			} else {
-				variables = append(variables, arr[i])
+				varbls = append(varbls, arr[i])
 			}
 		}
 	}
 	for i := 0; i < len(arr); i++ {
 		cadenaTotal = append(cadenaTotal, arr[i])
 	}
-	return cadenaTotal, variables, variableNueva
+	return cadenaTotal, varbls, variableNueva
 }
 
-//Ingresar el valor de las variables segun su ecuación
+//Ingresar el valor de las varbls segun su ecuación
 func (s *StackVariables) ValorVar(names []string) []string {
 	num := []string{}
 	for i := 0; i < len(names); i++ {
@@ -122,23 +121,23 @@ func (s *StackVariables) ValorVar(names []string) []string {
 	return num
 }
 
-func IntercambiarEcuacion(ecuacion []string, valores []string, variables []string) string {
-	ecuacionFinal := ""
-	for i := 0; i < len(ecuacion); i++ {
-		ecuacionFinal += ecuacion[i]
-		ecuacionFinal += " "
+func ordenarEcu(ecu []string, valores []string, varbls []string) string {
+	finalEcu := ""
+	for i := 0; i < len(ecu); i++ {
+		finalEcu += ecu[i]
+		finalEcu += " "
 	}
-	if final := len(ecuacionFinal) - 1; final >= 0 && ecuacionFinal[final] == ' ' {
-		ecuacionFinal = ecuacionFinal[:final]
+	if final := len(finalEcu) - 1; final >= 0 && finalEcu[final] == ' ' {
+		finalEcu = finalEcu[:final]
 	}
-	result := ecuacionFinal
+	result := finalEcu
 	for i := 0; i < len(valores); i++ {
-		result = strings.Replace(result, variables[i], valores[i], -1)
+		result = strings.Replace(result, varbls[i], valores[i], -1)
 	}
 	return result
 }
 
-func InsertarPila(a string) *Arbol {
+func insertPila(a string) *Arbol {
 	stack := NewStack()
 	val := strings.Split(a, " ")
 	for i := 0; i < len(val); i++ {
@@ -220,20 +219,18 @@ func validarVariable(v string) bool {
 	var validar = regexp.MustCompile(`^[A-Za-z]+$`)
 	verificar := validar.MatchString(v)
 
-	if verificar == true  {
+	if verificar == true {
 		return true
 	}
 	return false
 }
 
-
-
 //Funciones que afectan la clasificacion de tipos en las ecuaciones
 
 func (s *StackVariables) tiposVariable() {
 	for i := 0; i < s.count; i++ {
-		ecuacion := s.stackV[i].Ecuacion
-		arr := strings.Split(ecuacion, " ")
+		ecu := s.stackV[i].Ecuacion
+		arr := strings.Split(ecu, " ")
 		for j := 0; j < len(arr); j++ {
 			var valorValido = regexp.MustCompile(`^[0-9]+$`)
 			if valorValido.MatchString(arr[j]) == true {
@@ -250,16 +247,14 @@ func (s *StackVariables) tiposVariable() {
 	}
 }
 
-
-
 //Funciones que afectan las ecuaciones ingresadas por consola
 
 func (s *StackVariables) formIngresada() {
 	for i := 0; i < s.count; i++ {
 
-		ecuacionOriginal := s.stackV[i].EcuacionOriginal    
-		arrOriginal := strings.Split(ecuacionOriginal, " ") 
-		
+		ecuacionOriginal := s.stackV[i].EcuacionOriginal
+		arrOriginal := strings.Split(ecuacionOriginal, " ")
+
 		fmt.Println("Ecuacion: ", ecuacionOriginal)
 
 		for m := 0; m < len(arrOriginal); m++ {
@@ -273,13 +268,11 @@ func (s *StackVariables) formIngresada() {
 		}
 		cadenaOriginal := strings.Join(arrOriginal, " ")
 		fmt.Println("Ecuacion sin identificadores: ", cadenaOriginal)
-		result := InsertarPila(cadenaOriginal)
+		result := insertPila(cadenaOriginal)
 		fmt.Println("Ecuacion en inorden: ")
 		inorden(result)
-		fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(result),"\n")
-		
-		
-		
+		fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(result), "\n")
+
 	}
 }
 
@@ -305,19 +298,19 @@ func menu(s *StackVariables) {
 	switch opcion {
 	case 1:
 		fmt.Println("EJ: 2 3 + X :=")
-		fmt.Println("\nIngresar ecuacion en postfijo\n")
+		fmt.Println("\nIngresar ecuación en postfijo\n")
 		leer := bufio.NewScanner(os.Stdin)
 
 		for leer.Scan() {
 
 			opcionIngresada := leer.Text()
-			ecuacionAux, variables, variableAux := encontrarVariable(opcionIngresada)
-			ecuacion := s.ValorVar(variables)
-			ecuacionFinal := IntercambiarEcuacion(ecuacionAux, ecuacion, variables)
-			resultado := InsertarPila(ecuacionFinal)
-			valorFinal := strconv.Itoa(Operacion(resultado))
-			ecuacionSinVariable := quitaVariable(opcionIngresada)
-			s.PushV(&Variables{ecuacionFinal, valorFinal, variableAux, ecuacionSinVariable})
+			ecuacionAux, varbls, variableAux := encontrarVariable(opcionIngresada)
+			ecu := s.ValorVar(varbls)
+			finalEcu := ordenarEcu(ecuacionAux, ecu, varbls)
+			resultado := insertPila(finalEcu)
+			FinalV := strconv.Itoa(Operacion(resultado))
+			ecuNoVarbl := quitaVariable(opcionIngresada)
+			s.PushV(&Variables{finalEcu, FinalV, variableAux, ecuNoVarbl})
 
 			if s.varValida() == false {
 				fmt.Println("\nGO Error 2 Tipo variable invalido")
@@ -344,12 +337,12 @@ func main() {
 
 	for {
 		fmt.Println("1. Ingresar ecuaciones ")
-		fmt.Println("2. Tipos de variables")
+		fmt.Println("2. Tipos de varbls")
 		fmt.Println("3. Formulas ingresadas ")
 		fmt.Println("4. Exit\n")
 		fmt.Print("Opcion: ")
 		menu(stack)
-		
+
 	}
 
 }
