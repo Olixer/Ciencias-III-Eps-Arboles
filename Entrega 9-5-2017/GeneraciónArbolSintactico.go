@@ -244,6 +244,7 @@ func (s *StackVariables) tiposVariable() {
 
 		fmt.Println(fmt.Sprint("Identificador: ", s.stackV[i].Variable))
 		fmt.Println("Operador: :=")
+		fmt.Println("\n")
 	}
 }
 
@@ -269,10 +270,9 @@ func (s *StackVariables) formIngresada() {
 		cadenaOriginal := strings.Join(arrOriginal, " ")
 		fmt.Println("Ecuacion sin identificadores: ", cadenaOriginal)
 		result := insertPila(cadenaOriginal)
-		fmt.Println("Ecuacion en inorden: ")
+		fmt.Println("Ecuacion en infijo: ")
 		inorden(result)
-		fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(result), "\n")
-
+		fmt.Println("\nResultado = ", Operacion(result), "\n")
 	}
 }
 
@@ -297,7 +297,7 @@ func menu(s *StackVariables) {
 	}
 	switch opcion {
 	case 1:
-		fmt.Println("EJ: 2 3 + X :=")
+		fmt.Println("EJ: 7 2 + 8 - X :=")
 		fmt.Println("\nIngresar ecuación en postfijo\n")
 		leer := bufio.NewScanner(os.Stdin)
 
