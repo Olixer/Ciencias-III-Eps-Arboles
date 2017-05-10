@@ -276,6 +276,7 @@ func (s *StackVariables) formIngresada() {
 		result := InsertarPila(cadenaOriginal)
 		fmt.Println("Ecuacion en inorden: ")
 		inorden(result)
+		fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(result),"\n")
 		
 		
 		
@@ -321,10 +322,6 @@ func menu(s *StackVariables) {
 			if s.varValida() == false {
 				fmt.Println("\nGO Error 2 Tipo variable invalido")
 				os.Exit(3)
-			} else {
-				fmt.Println("")
-				fmt.Println("\nResultado: ", s.imprimirVariable(), " = ", Operacion(resultado))
-
 			}
 			break
 		}
@@ -356,4 +353,3 @@ func main() {
 	}
 
 }
-
